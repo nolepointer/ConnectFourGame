@@ -34,8 +34,12 @@ public class Board {
 		}
 	}
 	
-	void setNumberOfMoves(int numberOfMoves) {
-		this.numMoves = numberOfMoves;
+	void declareDraw() {
+		this.status = Status.DRAW;
+	}
+	
+	void addMove() {
+		numMoves++;
 	}
 	
 	void setLastMove(int position) {

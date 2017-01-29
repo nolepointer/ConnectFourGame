@@ -6,6 +6,7 @@ import gidus.ryan.connectfour.Board;
 import gidus.ryan.connectfour.ColumnIsFullException;
 import gidus.ryan.connectfour.ConnectFourGameManager;
 import gidus.ryan.connectfour.GamePiece;
+import gidus.ryan.connectfour.InvalidMoveException;
 import gidus.ryan.connectfour.Status;
 
 public class ConnectFourRunner {
@@ -35,15 +36,14 @@ public class ConnectFourRunner {
 			do{
 			System.out.println("Please select the column which you would like to move (1-7)?");
 			int column = input.nextInt();
-			if(column < 1 || column > 7) {
-				System.out.println("Please enter value between 1 and 7.");
-				continue;
-			}
 			
 			try {
 				board = gameManager.playerMove(boardId, column-1);
 			} catch (ColumnIsFullException e) {
 				System.out.println("Cannot move there, column is full");
+				continue;
+			} catch (InvalidMoveException e) {
+				System.out.println("Please enter value between 1 and 7.");
 				continue;
 			}
 			printBoard(board);

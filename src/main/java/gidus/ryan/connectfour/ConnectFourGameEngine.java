@@ -2,26 +2,36 @@ package gidus.ryan.connectfour;
 
 class ConnectFourGameEngine {
 	
-	public static void humanMove(Board board, int position) throws ColumnIsFullException{
-		insertIntoColumn(board.getGameBoard(), position, board.getHumanGamePiece());
-		checkStatus(board);
-		
-		board.setLastMove(position);
+	public static void humanMove(Board board, int position) throws ColumnIsFullException, InvalidMoveException{
+		move(board, position, board.getHumanGamePiece());
 	}
 	
-	public static void computerMove(Board board) {
+	public static void computerMove(Board board) throws ColumnIsFullException, InvalidMoveException {
 		//TODO improve AI
 		int position = (int)(Math.random() * Board.NUM_ROWS);
-		try{
-			insertIntoColumn(board.getGameBoard(), position, board.getComputerGamePiece());
+		move(board, position, board.getComputerGamePiece());
+	}
+	
+	public static void forceComputerMove(Board board, int position) throws ColumnIsFullException, InvalidMoveException{
+		move(board, position, board.getComputerGamePiece());
+	}
+	
+	private static void move(Board board, int position, GamePiece gamePiece) throws ColumnIsFullException, InvalidMoveException {
+		
+		if(position < 0 || position > Board.NUM_COLUMNS) {
+			throw new InvalidMoveException("Invalid column index.");
 		}
-		catch(ColumnIsFullException e) {
-			//Computer should never throw this exception
-		}
+		
+		insertIntoColumn(board.getGameBoard(), position, gamePiece);
 		
 		checkStatus(board);
 		
 		board.setLastMove(position);
+		board.addMove();
+		
+		if(board.getNumberOfMoves() == Board.NUM_COLUMNS * Board.NUM_ROWS) {
+			board.declareDraw();
+		}
 	}
 	
 	private static void insertIntoColumn(GamePiece[][] gamePieces, int position, GamePiece humanGamePiece) throws ColumnIsFullException {
@@ -88,4 +98,9 @@ class ConnectFourGameEngine {
 		return GamePiece.EMPTY;
 	}
 	
+	private static GamePiece checkDiagonalsForWinner(GamePiece[][] gamePieces) {
+		
+		
+		return GamePiece.EMPTY;
+	}
 }

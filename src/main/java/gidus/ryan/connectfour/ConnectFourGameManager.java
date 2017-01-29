@@ -6,7 +6,7 @@ public class ConnectFourGameManager {
 		private static ConnectFourGameManager instance = null;
 		private HashMap<String, Board> boards = new HashMap<>(); 
 				
-		protected ConnectFourGameManager() {
+		private ConnectFourGameManager() {
 			
 		}
 		
@@ -23,7 +23,12 @@ public class ConnectFourGameManager {
 			boards.put(board.getId(), board);
 			
 			if(!board.isHumanFirst()) {
-				ConnectFourGameEngine.computerMove(board);
+				try {
+					ConnectFourGameEngine.computerMove(board);
+				} catch (ColumnIsFullException | InvalidMoveException e) {
+					//The column should never be full on first turn and the computer should
+					//be making a valid move
+				}
 			}
 			return board;
 		}
@@ -36,17 +41,18 @@ public class ConnectFourGameManager {
 			return false;
 		}
 		
-		public Board playerMove(String boardId, int location) throws ColumnIsFullException{
-//			if(location )
-//				throw new InvalidMoveException
-			
-//			if id is off throw InvalidboardException
-			
+		public Board getBoard(String boardId) {
+			return boards.get(boardId);
+		}
+		
+		public Board playerMove(String boardId, int location) throws ColumnIsFullException, InvalidMoveException{
 			Board board = boards.get(boardId);
-//			try/catch full excecptions
-			ConnectFourGameEngine.humanMove(board, location);
-			if(board.getStatus() == Status.ONGOING) {
-				ConnectFourGameEngine.computerMove(board);
+
+			if(board!= null) {
+				ConnectFourGameEngine.humanMove(board, location);
+				if(board.getStatus() == Status.ONGOING) {
+					ConnectFourGameEngine.computerMove(board);
+				}
 			}
 			
 			return board;
