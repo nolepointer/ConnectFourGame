@@ -8,7 +8,31 @@ class ConnectFourGameEngine {
 	
 	public static void computerMove(Board board) throws ColumnIsFullException, InvalidMoveException {
 		//TODO improve AI
-		int position = (int)(Math.random() * Board.NUM_ROWS);
+		
+		int position = -1;
+
+		position = checkIfOneMoveFromWinning(board, board.getComputerGamePiece());
+
+		if(position == -1) {
+			position = checkIfOneMoveFromWinning(board, board.getHumanGamePiece());
+			if(position == -1) {
+				//Look for spots starting in random position that won't set human up for win
+				int startingPosition = (int)(Math.random() * Board.NUM_COLUMNS);
+				for(int i = startingPosition; i < Board.NUM_COLUMNS + startingPosition; i++) {
+					insertIntoColumn(board.getGameBoard(), i, board.getComputerGamePiece());
+					int humanCheck = checkIfOneMoveFromWinning(board, board.getHumanGamePiece());
+					if(humanCheck == -1) {
+						position = i;
+						popFromColumn(board.getGameBoard(), i);
+						break;
+					}
+					popFromColumn(board.getGameBoard(), i);
+					position = i;
+				}
+			}
+		}
+		
+		//Check if human can win
 		move(board, position, board.getComputerGamePiece());
 	}
 	
@@ -24,13 +48,25 @@ class ConnectFourGameEngine {
 		
 		insertIntoColumn(board.getGameBoard(), position, gamePiece);
 		
-		checkStatus(board);
+		GamePiece winner;
+		if((winner = checkStatus(board)) != GamePiece.EMPTY) {
+			board.declareWinner(winner);
+		}
 		
 		board.setLastMove(position);
 		board.addMove();
 		
 		if(board.getNumberOfMoves() == Board.NUM_COLUMNS * Board.NUM_ROWS) {
 			board.declareDraw();
+		}
+	}
+	
+	private static void popFromColumn(GamePiece[][] gamePieces, int position) {
+		for(int i = 0; i < Board.NUM_ROWS; i++) {
+			if(gamePieces[i][position] != GamePiece.EMPTY) {
+				gamePieces[i][position] = GamePiece.EMPTY;
+				return;
+			}
 		}
 	}
 	
@@ -44,21 +80,23 @@ class ConnectFourGameEngine {
 		throw new ColumnIsFullException("Cannot move here. Column is full");
 	}
 	
-	private static void checkStatus(Board board) {
+	private static GamePiece checkStatus(Board board) {
 		GamePiece winner;
 		if((winner = checkRowsForWinner(board.getGameBoard())) != GamePiece.EMPTY) {
-			board.declareWinner(winner);
+			return winner;
 		}
 		
 		else if((winner = checkColumnsForWinner(board.getGameBoard())) != GamePiece.EMPTY) {
-			board.declareWinner(winner);
+			return winner;
 		}
 		else if((winner = checkTopToBottomDiagonals(board.getGameBoard())) != GamePiece.EMPTY) {
-			board.declareWinner(winner);
+			return winner;
 		}
 		else if((winner = checkBottomToTopDiagonals(board.getGameBoard())) != GamePiece.EMPTY) {
-			board.declareWinner(winner);
+			return winner;
 		}
+		
+		return GamePiece.EMPTY;
 	}
 	
 	private static GamePiece checkRowsForWinner(GamePiece[][] gamePieces) {
@@ -145,5 +183,23 @@ class ConnectFourGameEngine {
 		}
 		
 		return GamePiece.EMPTY;
+	}
+	
+	private static int checkIfOneMoveFromWinning(Board board, GamePiece gamePiece) {
+		int position = -1;
+		for(int i = 0; i < Board.NUM_COLUMNS; i++) {
+			try {
+				insertIntoColumn(board.getGameBoard(), i, gamePiece);
+				if(checkStatus(board) == gamePiece) {
+					position = i;
+				}
+				popFromColumn(board.getGameBoard(), i);
+			}
+			catch(ColumnIsFullException e) {
+				
+			}
+		}
+		
+		return position;
 	}
 }

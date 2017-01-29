@@ -232,5 +232,58 @@ public class ConnectFourGameEngineTests {
 		assertEquals(board.getStatus(), Status.ONGOING);
 		assertEquals(board.isWinner(), false);
 	}
+	
+	@Test
+	public void testComputerChanceToWin() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		
+		ConnectFourGameEngine.computerMove(board);
+
+		assertEquals(board.getStatus(), Status.OVER);
+		assertEquals(board.isWinner(), false);
+		assertEquals(board.getLastMove(), 3);
+	}
+	
+	@Test
+	public void testComputerBlockHumanChanceToWin() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.humanMove(board, 0);
+		ConnectFourGameEngine.humanMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 2);
+		
+		ConnectFourGameEngine.computerMove(board);
+
+		assertEquals(board.getStatus(), Status.ONGOING);
+		assertEquals(board.isWinner(), false);
+		assertEquals(board.getLastMove(), 3);
+	}
+	
+	@Test
+	public void testComputerNotSetupHuman() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		
+		ConnectFourGameEngine.humanMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 2);
+		ConnectFourGameEngine.humanMove(board, 3);
+
+		ConnectFourGameEngine.computerMove(board);
+		
+
+		assertEquals(board.getStatus(), Status.ONGOING);
+		assertEquals(board.isWinner(), false);
+		assertNotEquals(board.getLastMove(), 0);
+	}
 
 }

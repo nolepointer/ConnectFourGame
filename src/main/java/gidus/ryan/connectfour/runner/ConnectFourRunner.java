@@ -46,16 +46,14 @@ public class ConnectFourRunner {
 			printResults(board);
 			gameManager.removeBoard(boardId);
 			
-			//TODO fix this and move to own function
 			System.out.println("Enter q to quit or any other key to play again...");
-			String playAgain = input.nextLine();
+			String playAgain = input.next();
 			if(playAgain.toUpperCase().equals("Q")) {
 				break;
 			}
 		
 		}
-		
-		System.out.println("Application has ended.");
+		System.out.println("The application has ended.");
 	}
 	
 	public static void printBoard(Board board) {
