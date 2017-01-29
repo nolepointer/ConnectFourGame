@@ -53,9 +53,12 @@ class ConnectFourGameEngine {
 		else if((winner = checkColumnsForWinner(board.getGameBoard())) != GamePiece.EMPTY) {
 			board.declareWinner(winner);
 		}
-		
-		//Check diaganols
-		
+		else if((winner = checkTopToBottomDiagonals(board.getGameBoard())) != GamePiece.EMPTY) {
+			board.declareWinner(winner);
+		}
+		else if((winner = checkBottomToTopDiagonals(board.getGameBoard())) != GamePiece.EMPTY) {
+			board.declareWinner(winner);
+		}
 	}
 	
 	private static GamePiece checkRowsForWinner(GamePiece[][] gamePieces) {
@@ -98,8 +101,48 @@ class ConnectFourGameEngine {
 		return GamePiece.EMPTY;
 	}
 	
-	private static GamePiece checkDiagonalsForWinner(GamePiece[][] gamePieces) {
+	private static GamePiece checkTopToBottomDiagonals(GamePiece[][] gamePieces) {
+		for(int i = 0; i < Board.NUM_ROWS - 3; i++) {
+			for(int j = 0; j < Board.NUM_COLUMNS - 3; j++) {
+				GamePiece match = gamePieces[i][j];
+				if(match == GamePiece.EMPTY) {
+					continue;
+				}
+				
+				boolean isFour = true;
+				for(int k = 1; k < 4; k++) {
+					if(gamePieces[i+k][j+k] != match) {
+						isFour = false;
+					}
+				}
+				if(isFour) {
+					return match;
+				}
+			}
+		}
 		
+		return GamePiece.EMPTY;
+	}
+	
+	private static GamePiece checkBottomToTopDiagonals(GamePiece[][] gamePieces) {
+		for(int i = 3; i < Board.NUM_ROWS; i++) {
+			for(int j = 0; j < Board.NUM_COLUMNS - 3; j++) {
+				GamePiece match = gamePieces[i][j];
+				if(match == GamePiece.EMPTY) {
+					continue;
+				}
+				
+				boolean isFour = true;
+				for(int k = 1; k < 4; k++) {
+					if(gamePieces[i-k][j+k] != match) {
+						isFour = false;
+					}
+				}
+				if(isFour) {
+					return match;
+				}
+			}
+		}
 		
 		return GamePiece.EMPTY;
 	}

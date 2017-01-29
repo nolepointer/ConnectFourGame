@@ -19,7 +19,8 @@ public class ConnectFourGameManager {
 		}
 		
 		public Board newBoard(boolean isFirst, GamePiece humanGamePiece) {
-			Board board = new Board(isFirst, humanGamePiece);
+			Board board = new Board(humanGamePiece);
+			board.setIsFirst(isFirst);
 			boards.put(board.getId(), board);
 			
 			if(!board.isHumanFirst()) {

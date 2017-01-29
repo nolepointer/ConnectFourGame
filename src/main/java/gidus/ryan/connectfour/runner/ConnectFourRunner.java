@@ -17,16 +17,9 @@ public class ConnectFourRunner {
 
 		while(true) {
 			Scanner input = new Scanner(System.in);
-			System.out.println("Please choose a red or black game piece color (r/b).");
-			String gamePieceString = input.nextLine();
-			GamePiece humanGamePiece = GamePiece.getValue(gamePieceString.toUpperCase().charAt(0));
-			
-			System.out.println("Would you like to go first (y/n)?");
-			String isFirstString = input.nextLine();
-			boolean isFirst = false;
-			if(isFirstString.toUpperCase().startsWith("Y")) {
-				isFirst = true;
-			}
+
+			GamePiece humanGamePiece = promptForColor(input);
+			boolean isFirst = promptIsFirst(input);
 			
 			Board board = gameManager.newBoard(isFirst, humanGamePiece);
 			String boardId = board.getId();
@@ -34,34 +27,26 @@ public class ConnectFourRunner {
 			printBoard(board);
 			
 			do{
-			System.out.println("Please select the column which you would like to move (1-7)?");
-			int column = input.nextInt();
+				System.out.println("Please select the column which you would like to move (1-7)?");
+				int column = input.nextInt();
+				
+				try {
+					board = gameManager.playerMove(boardId, column-1);
+				} catch (ColumnIsFullException e) {
+					System.out.println("Cannot move there, column is full");
+					continue;
+				} catch (InvalidMoveException e) {
+					System.out.println("Please enter value between 1 and 7.");
+					continue;
+				}
+				printBoard(board);
+			}
+			while(board.getStatus() == Status.ONGOING);
 			
-			try {
-				board = gameManager.playerMove(boardId, column-1);
-			} catch (ColumnIsFullException e) {
-				System.out.println("Cannot move there, column is full");
-				continue;
-			} catch (InvalidMoveException e) {
-				System.out.println("Please enter value between 1 and 7.");
-				continue;
-			}
-			printBoard(board);
-			}
-			while(board.getStatus() == Status.ONGOING);		
-			
-			if(board.getStatus() == Status.DRAW) {
-				System.out.println("Game ends in a draw");
-			}
-			else if(board.getStatus() == Status.OVER && board.isWinner()) {
-				System.out.println("Congratulations you won!\n");
-			}
-			else {
-				System.out.println("Sorry, you have lost.");
-			}
-			
+			printResults(board);
 			gameManager.removeBoard(boardId);
 			
+			//TODO fix this and move to own function
 			System.out.println("Enter q to quit or any other key to play again...");
 			String playAgain = input.nextLine();
 			if(playAgain.toUpperCase().equals("Q")) {
@@ -101,5 +86,35 @@ public class ConnectFourRunner {
 			System.out.print(" " + i + " ");
 		}
 		System.out.println("\n");
+	}
+	
+	private static boolean promptIsFirst(Scanner input) {
+		System.out.println("Would you like to go first (y/n)?");
+		String isFirstString = input.nextLine();
+		boolean isFirst = false;
+		if(isFirstString.toUpperCase().startsWith("Y")) {
+			isFirst = true;
+		}
+		
+		return isFirst;
+	}
+	
+	private static GamePiece promptForColor(Scanner input) {
+		System.out.println("Please choose a red or black game piece color (r/b).");
+		String gamePieceString = input.nextLine();
+		GamePiece gamePiece = GamePiece.getValue(gamePieceString.toUpperCase().charAt(0));
+		return gamePiece;
+	}
+	
+	private static void printResults(Board board) {
+		if(board.getStatus() == Status.DRAW) {
+			System.out.println("Game ends in a draw");
+		}
+		else if(board.getStatus() == Status.OVER && board.isWinner()) {
+			System.out.println("Congratulations you won!\n");
+		}
+		else {
+			System.out.println("Sorry, you have lost.");
+		}
 	}
 }

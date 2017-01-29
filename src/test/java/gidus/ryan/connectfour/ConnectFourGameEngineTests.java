@@ -9,7 +9,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testHumanMove() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		int movePosition = 0;
 		ConnectFourGameEngine.humanMove(board, movePosition);
@@ -23,7 +23,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testComputerMove() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.computerMove(board);
 		
@@ -35,7 +35,7 @@ public class ConnectFourGameEngineTests {
 	@Test(expected = ColumnIsFullException.class)
 	public void testHumanMoveColumnIsFull() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, 1);
 		ConnectFourGameEngine.humanMove(board, 1);
@@ -49,7 +49,7 @@ public class ConnectFourGameEngineTests {
 	@Test(expected = InvalidMoveException.class)
 	public void testInvalidMove() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, Board.NUM_COLUMNS + 1);
 	}
@@ -57,7 +57,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testDraw() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		int maxMoves = Board.NUM_COLUMNS * Board.NUM_ROWS;
 		
@@ -72,7 +72,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testWinByHorizontal() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.humanMove(board, 1);
@@ -86,7 +86,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testHorizontalGap() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.humanMove(board, 1);
@@ -101,7 +101,7 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testWinByVertical() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.humanMove(board, 0);
@@ -115,12 +115,118 @@ public class ConnectFourGameEngineTests {
 	@Test
 	public void testVerticalGap() throws ColumnIsFullException, InvalidMoveException {
 		GamePiece human = GamePiece.BLACK;
-		Board board = new Board(true, human);
+		Board board = new Board(human);
 		
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.humanMove(board, 0);
 		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.humanMove(board, 0);
+
+		assertEquals(board.getStatus(), Status.ONGOING);
+		assertEquals(board.isWinner(), false);
+	}
+	
+	@Test
+	public void testDiagonalTopToBottom() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.humanMove(board, 0);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 1);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.humanMove(board, 2);
+		
+		ConnectFourGameEngine.humanMove(board, 3);
+
+
+		assertEquals(board.getStatus(), Status.OVER);
+		assertEquals(board.isWinner(), true);
+	}
+	
+	@Test
+	public void testDiagonalTopToBottomGap() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.humanMove(board, 0);
+		ConnectFourGameEngine.humanMove(board, 0);
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.forceComputerMove(board, 0);
+		ConnectFourGameEngine.humanMove(board, 0);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 1);
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 1);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		
+		ConnectFourGameEngine.humanMove(board, 3);
+		ConnectFourGameEngine.humanMove(board, 3);
+		
+		ConnectFourGameEngine.humanMove(board, 4);
+
+		assertEquals(board.getStatus(), Status.ONGOING);
+		assertEquals(board.isWinner(), false);
+	}
+	
+	@Test
+	public void testDiagonalBottomToTop() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		ConnectFourGameEngine.humanMove(board, 3);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.humanMove(board, 2);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 1);
+		
+		ConnectFourGameEngine.humanMove(board, 0);
+
+
+		assertEquals(board.getStatus(), Status.OVER);
+		assertEquals(board.isWinner(), true);
+	}
+	
+	@Test
+	public void testDiagonalBottomToTopGap() throws ColumnIsFullException, InvalidMoveException {
+		GamePiece human = GamePiece.BLACK;
+		Board board = new Board(human);
+		
+		ConnectFourGameEngine.humanMove(board, 4);
+		ConnectFourGameEngine.humanMove(board, 4);
+		ConnectFourGameEngine.forceComputerMove(board, 4);
+		ConnectFourGameEngine.forceComputerMove(board, 4);
+		ConnectFourGameEngine.humanMove(board, 4);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		ConnectFourGameEngine.humanMove(board, 3);
+		ConnectFourGameEngine.forceComputerMove(board, 3);
+		ConnectFourGameEngine.humanMove(board, 3);
+		
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		ConnectFourGameEngine.forceComputerMove(board, 2);
+		
+		ConnectFourGameEngine.humanMove(board, 1);
+		ConnectFourGameEngine.humanMove(board, 1);
+		
 		ConnectFourGameEngine.humanMove(board, 0);
 
 		assertEquals(board.getStatus(), Status.ONGOING);

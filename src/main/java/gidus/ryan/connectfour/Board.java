@@ -11,7 +11,7 @@ public class Board {
 	private GamePiece[][] gameBoard;
 	private Status status;
 	
-	private boolean isFirst;
+	private boolean isFirst = true;
 	private boolean isWinner = false;
 	private GamePiece humanPiece;
 	private GamePiece computerPiece;
@@ -19,7 +19,7 @@ public class Board {
 	private int lastMove = -1;
 	private int numMoves = 0;
 	
-	Board(boolean isFirst, GamePiece human) {
+	Board(GamePiece human) {
 		this.isFirst = isFirst;
 		this.boardId = UUID.randomUUID().toString();
 		this.status = Status.ONGOING;
@@ -44,6 +44,10 @@ public class Board {
 	
 	void setLastMove(int position) {
 		this.lastMove = position;
+	}
+	
+	void setIsFirst(boolean isFirst) {
+		this.isFirst = isFirst;
 	}
 	
 	public int getNumberOfMoves() {
