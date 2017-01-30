@@ -41,9 +41,13 @@ public class ConnectFourGameManagerTests {
 		
 	}
 	
+	@Test
+	public void testPlayerMove() throws ColumnIsFullException, InvalidMoveException {
+		ConnectFourGameManager gameManager = ConnectFourGameManager.getInstance();
+		String id = gameManager.newBoard(true, GamePiece.RED).getId();
+		gameManager.playerMove(id, 0);
+		
+		assertNotNull(gameManager.getBoard(id));
+	}
 	
-	//removeBoard valid invalid
-	
-	//makemoves
-
 }

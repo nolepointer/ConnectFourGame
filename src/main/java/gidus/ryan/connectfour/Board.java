@@ -20,7 +20,6 @@ public class Board {
 	private int numMoves = 0;
 	
 	Board(GamePiece human) {
-		this.isFirst = isFirst;
 		this.boardId = UUID.randomUUID().toString();
 		this.status = Status.ONGOING;
 		initializeGamePieces(human);

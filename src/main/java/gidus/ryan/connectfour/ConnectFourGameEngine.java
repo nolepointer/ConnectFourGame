@@ -7,7 +7,6 @@ class ConnectFourGameEngine {
 	}
 	
 	public static void computerMove(Board board) throws ColumnIsFullException, InvalidMoveException {
-		//TODO improve AI
 		
 		int position = -1;
 
