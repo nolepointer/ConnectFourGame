@@ -2,6 +2,7 @@ Connect Four Game
 --------------
 
 ###Build and Deploy Game
+From ConnectFourGame directory
 ```
 $ mvn install
 $ mvn exec:java -Dexec.mainClass=gidus.ryan.connectfour.runner.ConnectFourRunner
@@ -14,5 +15,5 @@ mvn test
 
 ###Skipping Unit Tests
 ```
-mvn install -Dmaven.test.skip=true
+mvn install -DskipTests
 ```
