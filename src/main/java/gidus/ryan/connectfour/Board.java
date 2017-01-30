@@ -2,7 +2,6 @@ package gidus.ryan.connectfour;
 
 import java.util.UUID;
 
-//TODO make this sixbyseven board and board an interface
 public class Board {
 	
 	private String boardId;
@@ -66,7 +65,7 @@ public class Board {
 	}
 	
 	public GamePiece[][] getGameBoard() {
-		return gameBoard;
+		return gameBoard.clone();
 	}
 	
 	public GamePiece getHumanGamePiece() {

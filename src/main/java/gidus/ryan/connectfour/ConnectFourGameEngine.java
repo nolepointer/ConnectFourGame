@@ -18,7 +18,12 @@ class ConnectFourGameEngine {
 				//Look for spots starting in random position that won't set human up for win
 				int startingPosition = (int)(Math.random() * Board.NUM_COLUMNS);
 				for(int i = startingPosition; i < Board.NUM_COLUMNS + startingPosition; i++) {
+					try {
 					insertIntoColumn(board.getGameBoard(), i, board.getComputerGamePiece());
+					}
+					catch(ColumnIsFullException e) {
+						continue;
+					}
 					int humanCheck = checkIfOneMoveFromWinning(board, board.getHumanGamePiece());
 					if(humanCheck == -1) {
 						position = i;

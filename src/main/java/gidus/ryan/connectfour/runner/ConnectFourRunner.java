@@ -13,7 +13,9 @@ public class ConnectFourRunner {
 	public static void main (String[] args) {
 		ConnectFourGameManager gameManager = ConnectFourGameManager.getInstance();
 		
+		printSeperator();
 		System.out.println("Welcome to ConnectFour!\n");
+		printSeperator();
 
 		while(true) {
 			Scanner input = new Scanner(System.in);
@@ -28,6 +30,10 @@ public class ConnectFourRunner {
 			
 			do{
 				System.out.println("Please select the column which you would like to move (1-7)?");
+				while (!input.hasNextInt()) {
+					input.next();
+					System.out.println("Please enter an number.");
+				}
 				int column = input.nextInt();
 				
 				try {
@@ -98,21 +104,31 @@ public class ConnectFourRunner {
 	}
 	
 	private static GamePiece promptForColor(Scanner input) {
-		System.out.println("Please choose a red or black game piece color (r/b).");
+		System.out.println("Please choose a red or black disc color (r/b).");
 		String gamePieceString = input.nextLine();
 		GamePiece gamePiece = GamePiece.getValue(gamePieceString.toUpperCase().charAt(0));
+		if(gamePiece == null) {
+			gamePiece = GamePiece.RED;
+		}
 		return gamePiece;
 	}
 	
 	private static void printResults(Board board) {
+		printSeperator();
 		if(board.getStatus() == Status.DRAW) {
 			System.out.println("Game ends in a draw");
 		}
 		else if(board.getStatus() == Status.OVER && board.isWinner()) {
 			System.out.println("Congratulations you won!\n");
-		}
+		} 
 		else {
+			System.out.println("Computer moved to column " + (board.getLastMove() + 1) + " to connect four.");
 			System.out.println("Sorry, you have lost.");
 		}
+		printSeperator();
+	}
+	
+	private static void printSeperator() {
+		System.out.println("***********************");
 	}
 }

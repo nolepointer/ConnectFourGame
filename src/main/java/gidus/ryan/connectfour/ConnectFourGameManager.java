@@ -6,9 +6,7 @@ public class ConnectFourGameManager {
 		private static ConnectFourGameManager instance = null;
 		private HashMap<String, Board> boards = new HashMap<>(); 
 				
-		private ConnectFourGameManager() {
-			
-		}
+		private ConnectFourGameManager() {}
 		
 		public static ConnectFourGameManager getInstance() {
 			if(instance == null) {
@@ -55,7 +53,6 @@ public class ConnectFourGameManager {
 					ConnectFourGameEngine.computerMove(board);
 				}
 			}
-			
 			return board;
 		}
 }
